@@ -1,33 +1,123 @@
 @tailwind base;@tailwind components;@tailwind utilities;
 :root{
-  --bg:#fafaf9;--bg2:#f4f4f3;--bg3:#eeeeec;--card:#ffffff;--border:#e5e5e3;--border2:#d4d4d1;
-  --ink:#0a0a0a;--ink2:#404040;--ink3:#737373;--ink4:#a3a3a3;
-  --accent:#5b21b6;--accent2:#7c3aed;--accent-light:#ede9fe;
-  --red:#dc2626;--red-bg:#fee2e2;--amber:#d97706;--amber-bg:#fef3c7;--green:#059669;--green-bg:#d1fae5;--blue:#2563eb;--blue-bg:#dbeafe;
+  /* Surface — soft warm white, not pure white */
+  --bg: #fdfcfa;
+  --bg2: #f6f4ef;
+  --bg3: #ecebe5;
+  --card: #ffffff;
+  --border: #ebe9e2;
+  --border2: #d8d4c8;
+  
+  /* Ink — deep charcoal, not pure black */
+  --ink: #1c1c1a;
+  --ink2: #3d3b36;
+  --ink3: #76746c;
+  --ink4: #a8a59c;
+  --ink5: #d8d4c8;
+  
+  /* Accent — jade green, refined */
+  --accent: #2d6a4f;
+  --accent2: #40916c;
+  --accent-light: #e8f0eb;
+  --accent-soft: #f1f5f2;
+  
+  /* Semantic */
+  --red: #b91c1c;
+  --red-bg: #fef2f2;
+  --amber: #b45309;
+  --amber-bg: #fef9ee;
+  --green: #15803d;
+  --green-bg: #f0fdf4;
+  --blue: #1d4ed8;
+  --blue-bg: #eff6ff;
+  
+  /* Shadows — subtle, layered */
+  --shadow-sm: 0 1px 2px rgba(28,28,26,.04);
+  --shadow: 0 4px 12px rgba(28,28,26,.06), 0 1px 2px rgba(28,28,26,.04);
+  --shadow-lg: 0 20px 48px rgba(28,28,26,.08), 0 4px 12px rgba(28,28,26,.04);
 }
-@media (prefers-color-scheme: dark) {
-  :root{
-    --bg:#0a0a0a;--bg2:#141414;--bg3:#1c1c1c;--card:#171717;--border:#262626;--border2:#404040;
-    --ink:#fafafa;--ink2:#d4d4d4;--ink3:#a3a3a3;--ink4:#737373;
-    --accent:#a78bfa;--accent2:#c4b5fd;--accent-light:#1e1b4b;
-    --red-bg:#450a0a;--amber-bg:#451a03;--green-bg:#022c22;--blue-bg:#172554;
-  }
-}
+
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:-0.01em}
-::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--ink4)}
-input,button,select,textarea{font-family:inherit;color:inherit}button{cursor:pointer}
+html{font-feature-settings:'ss01' on,'cv11' on}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  letter-spacing:-0.011em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle paper texture via SVG noise — barely perceptible */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.6;
+  mix-blend-mode:multiply;
+}
+
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--ink4)}
+
+input,button,select,textarea{font-family:inherit;color:inherit}
+button{cursor:pointer}
+
+/* Display serif for headings — adds character against the clean body */
+.serif{font-family:'Instrument Serif','Cormorant Garamond',Georgia,serif;font-weight:400;letter-spacing:-0.02em;font-feature-settings:'ss01' on}
+
+/* Mono for data/metrics */
+.mono{font-family:'JetBrains Mono','SF Mono',monospace;font-variant-numeric:tabular-nums}
+
+/* Subtle uppercase eyebrow */
+.eyebrow{text-transform:uppercase;letter-spacing:0.14em;font-size:10px;font-weight:600;color:var(--ink3)}
+
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
-@keyframes pop{0%{transform:scale(.95)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.fade-in{animation:fadeIn .2s ease forwards}
-.slide-in{animation:slideIn .25s ease forwards}
-.pop{animation:pop .25s ease}
-.spin{animation:spin 1s linear infinite}
-.fancy-check{transition:all .2s cubic-bezier(.4,0,.2,1)}
-.fancy-check.checked{background:var(--accent);border-color:var(--accent)}
+@keyframes slideIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pop{0%{transform:scale(.96)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+.fade-in{animation:fadeIn .25s cubic-bezier(.4,0,.2,1) forwards}
+.slide-in{animation:slideIn .25s cubic-bezier(.4,0,.2,1) forwards}
+.pop{animation:pop .2s cubic-bezier(.4,0,.2,1)}
+
+/* Custom checkbox with smooth fill */
+.fancy-check{
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.fancy-check.checked{
+  background:var(--accent)!important;
+  border-color:var(--accent)!important;
+}
+.fancy-check:hover:not(.checked){
+  border-color:var(--accent)!important;
+  background:var(--accent-soft);
+}
+
+/* Drag and drop */
 [draggable=true]{cursor:grab}
 [draggable=true]:active{cursor:grabbing}
-.dragging{opacity:.4}
-.drag-over{background:var(--accent-light)!important;border:1px dashed var(--accent)!important}
+.dragging{opacity:.4;transform:scale(.97)}
+.drag-over{
+  background:var(--accent-light)!important;
+  border:1px dashed var(--accent)!important;
+}
+
+/* Focus rings - jade tinted, not blue */
+*:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* Selection */
+::selection{background:var(--accent-light);color:var(--accent)}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
