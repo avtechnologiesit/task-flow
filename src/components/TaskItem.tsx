@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Task, Subtask } from '@/types'
+import { Task } from '@/types'
 import { Icons } from './icons'
 
 interface Props {
@@ -32,10 +32,11 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
       onMouseLeave={() => setHover(false)}
       onClick={() => onClick(task)}
       style={{
-        display: 'flex', alignItems: 'flex-start', gap: 12, padding: compact ? '10px 14px' : '14px 16px',
-        borderRadius: 10, background: hover ? 'var(--bg2)' : 'transparent', cursor: 'pointer',
-        transition: 'all .15s ease', border: '1px solid transparent',
-        borderColor: hover ? 'var(--border)' : 'transparent',
+        display: 'flex', alignItems: 'flex-start', gap: 14, padding: compact ? '11px 14px' : '14px 18px',
+        borderRadius: 10, background: hover ? 'var(--card)' : 'transparent',
+        cursor: 'pointer', transition: 'all .15s ease',
+        border: `1px solid ${hover ? 'var(--border)' : 'transparent'}`,
+        boxShadow: hover ? 'var(--shadow-sm)' : 'none',
       }}
     >
       {/* Checkbox */}
@@ -44,8 +45,8 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
         className={done ? 'fancy-check checked' : 'fancy-check'}
         style={{
           flexShrink: 0, width: 18, height: 18, marginTop: 2,
-          border: `1.5px solid ${done ? 'var(--accent)' : task.project_color || 'var(--border2)'}`,
-          background: done ? 'var(--accent)' : 'transparent', borderRadius: '50%',
+          border: `1.5px solid ${done ? 'var(--accent)' : 'var(--border2)'}`,
+          background: done ? 'var(--accent)' : 'var(--card)', borderRadius: '50%',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
       >
@@ -54,19 +55,21 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
 
       {/* Body */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap' }}>
           <span style={{
             fontSize: 14, fontWeight: 500, color: done ? 'var(--ink4)' : 'var(--ink)',
             textDecoration: done ? 'line-through' : 'none', lineHeight: 1.4,
+            letterSpacing: '-0.005em',
           }}>{task.title}</span>
           {task.priority !== 'normal' && task.priority !== 'low' && !done && (
             <span style={{
-              fontSize: 10, padding: '1px 7px', borderRadius: 10, fontWeight: 600,
+              fontSize: 9.5, padding: '2px 8px', borderRadius: 10, fontWeight: 600,
               background: PRIORITY_COLORS[task.priority].bg,
               color: PRIORITY_COLORS[task.priority].text,
-              display: 'flex', alignItems: 'center', gap: 3,
+              display: 'flex', alignItems: 'center', gap: 4,
+              letterSpacing: '.04em',
             }}>
-              {task.priority === 'urgent' && <Icons.flame size={10} />}
+              {task.priority === 'urgent' && <Icons.flame size={9} />}
               {task.priority.toUpperCase()}
             </span>
           )}
@@ -77,25 +80,25 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
 
         {/* Meta row */}
         {(task.due_date || task.project_name || (task.tags && task.tags.length > 0) || totalSubs > 0) && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 5, fontSize: 11, color: 'var(--ink3)', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginTop: 6, fontSize: 11.5, color: 'var(--ink3)', flexWrap: 'wrap' }}>
             {task.project_name && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: task.project_color || 'var(--ink4)' }} />
                 {task.project_name}
               </span>
             )}
             {task.due_date && (
-              <span style={{ color: isOverdue ? 'var(--red)' : 'var(--ink3)', fontWeight: isOverdue ? 600 : 400 }}>
+              <span style={{ color: isOverdue ? 'var(--red)' : 'var(--ink3)', fontWeight: isOverdue ? 500 : 400 }}>
                 {formatDueDate(task.due_date)}
               </span>
             )}
             {totalSubs > 0 && (
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
+              <span className="mono" style={{ fontSize: 11 }}>
                 {completedSubs}/{totalSubs}
               </span>
             )}
             {task.tags && task.tags.map(tag => (
-              <span key={tag} style={{ padding: '1px 7px', borderRadius: 6, background: 'var(--bg3)', fontSize: 10, color: 'var(--ink3)' }}>
+              <span key={tag} style={{ padding: '1px 8px', borderRadius: 6, background: 'var(--bg3)', fontSize: 10.5, color: 'var(--ink3)' }}>
                 #{tag}
               </span>
             ))}
@@ -108,8 +111,8 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
         <button
           onClick={e => { e.stopPropagation(); onDelete(task.id) }}
           style={{
-            background: 'transparent', border: 'none', padding: 6, borderRadius: 6,
-            color: 'var(--ink4)', flexShrink: 0,
+            background: 'transparent', border: 'none', padding: 7, borderRadius: 6,
+            color: 'var(--ink4)', flexShrink: 0, display: 'inline-flex',
           }}
           title="Delete"
         >
