@@ -1,0 +1,33 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+:root{
+  --bg:#fafaf9;--bg2:#f4f4f3;--bg3:#eeeeec;--card:#ffffff;--border:#e5e5e3;--border2:#d4d4d1;
+  --ink:#0a0a0a;--ink2:#404040;--ink3:#737373;--ink4:#a3a3a3;
+  --accent:#5b21b6;--accent2:#7c3aed;--accent-light:#ede9fe;
+  --red:#dc2626;--red-bg:#fee2e2;--amber:#d97706;--amber-bg:#fef3c7;--green:#059669;--green-bg:#d1fae5;--blue:#2563eb;--blue-bg:#dbeafe;
+}
+@media (prefers-color-scheme: dark) {
+  :root{
+    --bg:#0a0a0a;--bg2:#141414;--bg3:#1c1c1c;--card:#171717;--border:#262626;--border2:#404040;
+    --ink:#fafafa;--ink2:#d4d4d4;--ink3:#a3a3a3;--ink4:#737373;
+    --accent:#a78bfa;--accent2:#c4b5fd;--accent-light:#1e1b4b;
+    --red-bg:#450a0a;--amber-bg:#451a03;--green-bg:#022c22;--blue-bg:#172554;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;letter-spacing:-0.01em}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--ink4)}
+input,button,select,textarea{font-family:inherit;color:inherit}button{cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pop{0%{transform:scale(.95)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fade-in{animation:fadeIn .2s ease forwards}
+.slide-in{animation:slideIn .25s ease forwards}
+.pop{animation:pop .25s ease}
+.spin{animation:spin 1s linear infinite}
+.fancy-check{transition:all .2s cubic-bezier(.4,0,.2,1)}
+.fancy-check.checked{background:var(--accent);border-color:var(--accent)}
+[draggable=true]{cursor:grab}
+[draggable=true]:active{cursor:grabbing}
+.dragging{opacity:.4}
+.drag-over{background:var(--accent-light)!important;border:1px dashed var(--accent)!important}
