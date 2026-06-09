@@ -4,9 +4,9 @@ import { Task } from '@/types'
 import { Icons } from './icons'
 
 const COLUMNS = [
-  { id: 'todo', label: 'To do', color: 'var(--blue)', bg: 'var(--blue-bg)' },
-  { id: 'in_progress', label: 'In progress', color: 'var(--amber)', bg: 'var(--amber-bg)' },
-  { id: 'done', label: 'Done', color: 'var(--green)', bg: 'var(--green-bg)' },
+  { id: 'todo', label: 'To do', color: 'var(--ink3)', dot: '#94a3b8' },
+  { id: 'in_progress', label: 'In progress', color: 'var(--amber)', dot: '#d97706' },
+  { id: 'done', label: 'Done', color: 'var(--accent)', dot: '#2d6a4f' },
 ] as const
 
 interface Props {
@@ -21,8 +21,8 @@ export function KanbanBoard({ tasks, onUpdate, onClick }: Props) {
 
   return (
     <div style={{
-      display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14,
-      minHeight: 'calc(100vh - 220px)',
+      display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+      minHeight: 'calc(100vh - 240px)',
     }}>
       {COLUMNS.map(col => {
         const colTasks = tasks.filter(t => t.status === col.id)
@@ -38,18 +38,18 @@ export function KanbanBoard({ tasks, onUpdate, onClick }: Props) {
               setDragOverCol(null)
             }}
             style={{
-              background: dragOverCol === col.id ? col.bg : 'var(--bg2)',
-              borderRadius: 14, padding: 14,
-              border: dragOverCol === col.id ? `1px dashed ${col.color}` : '1px solid var(--border)',
+              background: dragOverCol === col.id ? 'var(--accent-light)' : 'var(--bg2)',
+              borderRadius: 14, padding: 16,
+              border: dragOverCol === col.id ? `1px dashed var(--accent)` : '1px solid var(--border)',
               transition: 'all .15s ease',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: col.color }} />
-                <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{col.label}</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: col.dot }} />
+                <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.01em' }}>{col.label}</span>
               </div>
-              <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 10, background: 'var(--bg3)', color: 'var(--ink3)', fontFamily: "'JetBrains Mono', monospace" }}>
+              <span className="mono" style={{ fontSize: 11, padding: '2px 9px', borderRadius: 10, background: 'var(--bg3)', color: 'var(--ink3)' }}>
                 {colTasks.length}
               </span>
             </div>
@@ -66,7 +66,7 @@ export function KanbanBoard({ tasks, onUpdate, onClick }: Props) {
                 />
               ))}
               {colTasks.length === 0 && (
-                <div style={{ padding: '16px 0', textAlign: 'center', color: 'var(--ink4)', fontSize: 11 }}>
+                <div style={{ padding: '20px 0', textAlign: 'center', color: 'var(--ink4)', fontSize: 11, fontStyle: 'italic' }}>
                   Drop tasks here
                 </div>
               )}
@@ -88,14 +88,17 @@ function KanbanCard({ task, dragging, onDragStart, onDragEnd, onClick }: { task:
       className={dragging ? 'dragging' : ''}
       style={{
         background: 'var(--card)', border: '1px solid var(--border)',
-        borderRadius: 10, padding: 12, cursor: 'pointer',
-        boxShadow: '0 1px 2px rgba(0,0,0,.03)',
+        borderRadius: 10, padding: '12px 14px', cursor: 'pointer',
+        boxShadow: 'var(--shadow-sm)',
+        transition: 'all .15s ease',
       }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow)' }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)' }}
     >
-      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.4, marginBottom: 6 }}>{task.title}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', fontSize: 10, color: 'var(--ink3)' }}>
+      <div style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.4, marginBottom: 7, letterSpacing: '-0.005em' }}>{task.title}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap', fontSize: 10.5, color: 'var(--ink3)' }}>
         {task.project_name && (
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: task.project_color || 'var(--ink4)' }} />
             {task.project_name}
           </span>
@@ -104,7 +107,7 @@ function KanbanCard({ task, dragging, onDragStart, onDragEnd, onClick }: { task:
           <span>{formatDate(task.due_date)}</span>
         )}
         {task.priority === 'urgent' && <Icons.flame size={10} color="var(--red)" />}
-        {task.priority === 'high' && <span style={{ color: 'var(--amber)' }}>High</span>}
+        {task.priority === 'high' && <span style={{ color: 'var(--amber)', fontWeight: 500 }}>High</span>}
       </div>
     </div>
   )
