@@ -37,29 +37,26 @@ export function CalendarView({ tasks, onClick, onCreateAtDate }: Props) {
 
   return (
     <div>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-        <h2 style={{ fontSize: 22, fontWeight: 600, color: 'var(--ink)' }}>{monthName}</h2>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
+        <h2 className="serif" style={{ fontSize: 28, fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.02em' }}>{monthName}</h2>
         <div style={{ display: 'flex', gap: 4 }}>
           <button onClick={() => setCursor(new Date(year, month - 1, 1))} style={navBtn}>
-            <span style={{ transform: 'rotate(180deg)', display: 'inline-flex' }}><Icons.arrow size={14} /></span>
+            <span style={{ transform: 'rotate(180deg)', display: 'inline-flex' }}><Icons.arrow size={13} /></span>
           </button>
-          <button onClick={() => setCursor(new Date())} style={{ ...navBtn, padding: '6px 12px', width: 'auto', fontSize: 12 }}>Today</button>
+          <button onClick={() => setCursor(new Date())} style={{ ...navBtn, padding: '7px 14px', width: 'auto', fontSize: 12, fontWeight: 500 }}>Today</button>
           <button onClick={() => setCursor(new Date(year, month + 1, 1))} style={navBtn}>
-            <Icons.arrow size={14} />
+            <Icons.arrow size={13} />
           </button>
         </div>
       </div>
 
-      {/* Day headers */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 8, marginBottom: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6, marginBottom: 8 }}>
         {DAYS.map(d => (
-          <div key={d} style={{ fontSize: 11, fontWeight: 600, color: 'var(--ink4)', letterSpacing: '.06em', textTransform: 'uppercase', textAlign: 'center', padding: '6px 0' }}>{d}</div>
+          <div key={d} className="eyebrow" style={{ textAlign: 'center', padding: '8px 0' }}>{d}</div>
         ))}
       </div>
 
-      {/* Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6 }}>
         {days.map((day, i) => {
           if (day === null) return <div key={i} />
           const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
@@ -72,35 +69,45 @@ export function CalendarView({ tasks, onClick, onCreateAtDate }: Props) {
             <div key={i}
               onClick={() => onCreateAtDate(dateStr)}
               style={{
-                minHeight: 110, padding: 10, borderRadius: 10,
+                minHeight: 118, padding: 11, borderRadius: 10,
                 background: isToday ? 'var(--accent-light)' : 'var(--card)',
                 border: `1px solid ${isToday ? 'var(--accent)' : 'var(--border)'}`,
                 cursor: 'pointer', transition: 'all .15s ease',
-                opacity: isPast ? 0.7 : 1,
+                opacity: isPast ? 0.65 : 1,
+                boxShadow: isToday ? 'var(--shadow-sm)' : 'none',
+              }}
+              onMouseEnter={e => {
+                if (!isToday) (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)'
+              }}
+              onMouseLeave={e => {
+                if (!isToday) (e.currentTarget as HTMLElement).style.boxShadow = 'none'
               }}>
               <div style={{
-                fontSize: 13, fontWeight: isToday ? 700 : 500,
-                color: isToday ? 'var(--accent)' : 'var(--ink)',
-                marginBottom: 6, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                fontSize: 13, fontWeight: isToday ? 600 : 500,
+                color: isToday ? 'var(--accent)' : 'var(--ink2)',
+                marginBottom: 7, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                fontFamily: isToday ? "'Instrument Serif', serif" : "inherit",
+                fontSize: isToday ? 16 : 13,
               }}>
                 <span>{day}</span>
                 {dayTasks.length > 0 && (
-                  <span style={{ fontSize: 9, padding: '1px 6px', borderRadius: 8, background: 'var(--bg3)', color: 'var(--ink3)', fontFamily: "'JetBrains Mono', monospace" }}>{dayTasks.length}</span>
+                  <span className="mono" style={{ fontSize: 9, padding: '1px 6px', borderRadius: 8, background: 'var(--bg3)', color: 'var(--ink3)' }}>{dayTasks.length}</span>
                 )}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 {dayTasks.slice(0, 3).map(t => (
                   <div key={t.id} onClick={e => { e.stopPropagation(); onClick(t) }} style={{
-                    fontSize: 10, padding: '3px 6px', borderRadius: 5,
-                    background: t.project_color ? t.project_color + '20' : 'var(--bg3)',
+                    fontSize: 10.5, padding: '3px 7px', borderRadius: 5,
+                    background: t.project_color ? t.project_color + '14' : 'var(--bg3)',
                     color: t.status === 'done' ? 'var(--ink4)' : 'var(--ink2)',
                     textDecoration: t.status === 'done' ? 'line-through' : 'none',
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                     borderLeft: `2px solid ${t.project_color || 'var(--accent)'}`,
+                    fontWeight: 500,
                   }}>{t.title}</div>
                 ))}
                 {dayTasks.length > 3 && (
-                  <div style={{ fontSize: 9, color: 'var(--ink4)', textAlign: 'center', paddingTop: 2 }}>+{dayTasks.length - 3} more</div>
+                  <div style={{ fontSize: 9.5, color: 'var(--ink4)', textAlign: 'center', paddingTop: 3 }}>+{dayTasks.length - 3} more</div>
                 )}
               </div>
             </div>
@@ -112,7 +119,8 @@ export function CalendarView({ tasks, onClick, onCreateAtDate }: Props) {
 }
 
 const navBtn: React.CSSProperties = {
-  width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border)',
+  width: 34, height: 34, borderRadius: 8, border: '1px solid var(--border)',
   background: 'var(--card)', color: 'var(--ink2)', display: 'inline-flex',
   alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+  boxShadow: 'var(--shadow-sm)',
 }
