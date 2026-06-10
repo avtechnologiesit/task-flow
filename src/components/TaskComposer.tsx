@@ -38,21 +38,14 @@ export function TaskComposer({ projects, defaultProjectId, onCreate }: Props) {
       <button onClick={() => setOpen(true)} style={{
         width: '100%', padding: '14px 18px', borderRadius: 12,
         background: 'var(--card)', border: '1px solid var(--border)',
-        color: 'var(--ink3)', fontSize: 14, display: 'flex', alignItems: 'center', gap: 10,
-        transition: 'all .15s ease', boxShadow: 'var(--shadow-sm)',
+        color: 'var(--ink3)', fontSize: 13, display: 'flex', alignItems: 'center', gap: 9,
+        transition: 'all .15s cubic-bezier(.16,1,.3,1)',
+        boxShadow: 'var(--shadow-sm)',
       }}
-        onMouseEnter={e => {
-          (e.target as HTMLElement).style.borderColor = 'var(--accent)'
-          ;(e.target as HTMLElement).style.color = 'var(--accent)'
-          ;(e.target as HTMLElement).style.background = 'var(--accent-soft)'
-        }}
-        onMouseLeave={e => {
-          (e.target as HTMLElement).style.borderColor = 'var(--border)'
-          ;(e.target as HTMLElement).style.color = 'var(--ink3)'
-          ;(e.target as HTMLElement).style.background = 'var(--card)'
-        }}>
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)'; (e.currentTarget as HTMLElement).style.color = 'var(--accent)' }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.color = 'var(--ink3)' }}>
         <Icons.plus size={14} />
-        Add a task
+        Add task
       </button>
     )
   }
@@ -70,10 +63,10 @@ export function TaskComposer({ projects, defaultProjectId, onCreate }: Props) {
         placeholder="What needs to be done?"
         style={{
           width: '100%', background: 'transparent', border: 'none', outline: 'none',
-          fontSize: 15.5, fontWeight: 500, color: 'var(--ink)',
+          fontSize: 15, fontWeight: 500, color: 'var(--ink)', letterSpacing: '-0.01em',
         }}
       />
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 12, flexWrap: 'wrap' }}>
         <input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} style={pillStyle} />
         <select value={priority} onChange={e => setPriority(e.target.value)} style={pillStyle}>
           <option value="low">Low</option>
@@ -87,13 +80,14 @@ export function TaskComposer({ projects, defaultProjectId, onCreate }: Props) {
         </select>
         <div style={{ flex: 1 }} />
         <button onClick={() => setOpen(false)} style={{
-          padding: '7px 14px', borderRadius: 7, border: '1px solid var(--border)',
-          background: 'var(--bg2)', color: 'var(--ink2)', fontSize: 12, fontWeight: 500,
+          padding: '6px 14px', borderRadius: 8, border: '1px solid var(--border)',
+          background: 'transparent', color: 'var(--ink2)', fontSize: 12, fontWeight: 500,
         }}>Cancel</button>
         <button onClick={submit} disabled={!title.trim()} style={{
-          padding: '7px 18px', borderRadius: 7, border: 'none',
+          padding: '6px 18px', borderRadius: 8, border: 'none',
           background: title.trim() ? 'var(--accent)' : 'var(--bg3)',
           color: title.trim() ? '#fff' : 'var(--ink4)', fontSize: 12, fontWeight: 600,
+          letterSpacing: '0.01em',
         }}>Add task</button>
       </div>
     </div>
@@ -101,6 +95,6 @@ export function TaskComposer({ projects, defaultProjectId, onCreate }: Props) {
 }
 
 const pillStyle: React.CSSProperties = {
-  padding: '6px 10px', borderRadius: 7, border: '1px solid var(--border)',
+  padding: '6px 10px', borderRadius: 8, border: '1px solid var(--border)',
   background: 'var(--bg2)', fontSize: 12, color: 'var(--ink2)', outline: 'none',
 }
