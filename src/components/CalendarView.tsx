@@ -29,7 +29,7 @@ export function CalendarView({ tasks, onClick, onCreateAtDate }: Props) {
   while (days.length % 7 !== 0) days.push(null)
 
   const getTasksForDay = (day: number) => {
-    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0')
     return tasks.filter(t => t.due_date === dateStr)
   }
 
@@ -37,29 +37,32 @@ export function CalendarView({ tasks, onClick, onCreateAtDate }: Props) {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
-        <h2 className="serif" style={{ fontSize: 28, fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.02em' }}>{monthName}</h2>
-        <div style={{ display: 'flex', gap: 4 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+        <h2 className="serif" style={{ fontSize: 28, fontWeight: 400, color: 'var(--ink)' }}>{monthName}</h2>
+        <div style={{ display: 'flex', gap: 6 }}>
           <button onClick={() => setCursor(new Date(year, month - 1, 1))} style={navBtn}>
-            <span style={{ transform: 'rotate(180deg)', display: 'inline-flex' }}><Icons.arrow size={13} /></span>
+            <span style={{ transform: 'rotate(180deg)', display: 'inline-flex' }}><Icons.arrow size={14} /></span>
           </button>
-          <button onClick={() => setCursor(new Date())} style={{ ...navBtn, padding: '7px 14px', width: 'auto', fontSize: 12, fontWeight: 500 }}>Today</button>
+          <button onClick={() => setCursor(new Date())} style={{ ...navBtn, padding: '6px 14px', width: 'auto', fontSize: 12, fontWeight: 500 }}>Today</button>
           <button onClick={() => setCursor(new Date(year, month + 1, 1))} style={navBtn}>
-            <Icons.arrow size={13} />
+            <Icons.arrow size={14} />
           </button>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6, marginBottom: 8 }}>
+      {/* Day headers */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 8, marginBottom: 10 }}>
         {DAYS.map(d => (
-          <div key={d} className="eyebrow" style={{ textAlign: 'center', padding: '8px 0' }}>{d}</div>
+          <div key={d} className="eyebrow" style={{ textAlign: 'center', padding: '6px 0' }}>{d}</div>
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6 }}>
+      {/* Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 8 }}>
         {days.map((day, i) => {
           if (day === null) return <div key={i} />
-          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+          const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0')
           const cellDate = new Date(year, month, day)
           const dayTasks = getTasksForDay(day)
           const isToday = cellDate.getTime() === today.getTime()
@@ -71,43 +74,37 @@ export function CalendarView({ tasks, onClick, onCreateAtDate }: Props) {
               style={{
                 minHeight: 118, padding: 11, borderRadius: 10,
                 background: isToday ? 'var(--accent-light)' : 'var(--card)',
-                border: `1px solid ${isToday ? 'var(--accent)' : 'var(--border)'}`,
-                cursor: 'pointer', transition: 'all .15s ease',
-                opacity: isPast ? 0.65 : 1,
-                boxShadow: isToday ? 'var(--shadow-sm)' : 'none',
-              }}
-              onMouseEnter={e => {
-                if (!isToday) (e.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)'
-              }}
-              onMouseLeave={e => {
-                if (!isToday) (e.currentTarget as HTMLElement).style.boxShadow = 'none'
+                border: isToday ? '1px solid var(--accent)' : '1px solid var(--border)',
+                cursor: 'pointer', transition: 'all .15s cubic-bezier(.16,1,.3,1)',
+                opacity: isPast && !isToday ? 0.72 : 1,
+                boxShadow: isToday ? 'var(--shadow)' : 'none',
               }}>
               <div style={{
-                fontSize: 13, fontWeight: isToday ? 600 : 500,
-                color: isToday ? 'var(--accent)' : 'var(--ink2)',
+                fontSize: 13,
+                fontFamily: isToday ? "'Instrument Serif', serif" : "'Inter', sans-serif",
+                fontWeight: isToday ? 400 : 500,
+                fontStyle: isToday ? 'italic' : 'normal',
+                color: isToday ? 'var(--accent)' : (isPast ? 'var(--ink4)' : 'var(--ink)'),
                 marginBottom: 7, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                fontFamily: isToday ? "'Instrument Serif', serif" : "inherit",
-                fontSize: isToday ? 16 : 13,
               }}>
-                <span>{day}</span>
+                <span style={{ fontSize: isToday ? 18 : 13 }}>{day}</span>
                 {dayTasks.length > 0 && (
-                  <span className="mono" style={{ fontSize: 9, padding: '1px 6px', borderRadius: 8, background: 'var(--bg3)', color: 'var(--ink3)' }}>{dayTasks.length}</span>
+                  <span className="mono" style={{ fontSize: 9, padding: '1px 6px', borderRadius: 8, background: isToday ? 'var(--accent)' : 'var(--bg3)', color: isToday ? '#fff' : 'var(--ink3)' }}>{dayTasks.length}</span>
                 )}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 {dayTasks.slice(0, 3).map(t => (
                   <div key={t.id} onClick={e => { e.stopPropagation(); onClick(t) }} style={{
-                    fontSize: 10.5, padding: '3px 7px', borderRadius: 5,
-                    background: t.project_color ? t.project_color + '14' : 'var(--bg3)',
+                    fontSize: 10, padding: '3px 7px', borderRadius: 5,
+                    background: t.project_color ? t.project_color + '15' : 'var(--bg2)',
                     color: t.status === 'done' ? 'var(--ink4)' : 'var(--ink2)',
                     textDecoration: t.status === 'done' ? 'line-through' : 'none',
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                    borderLeft: `2px solid ${t.project_color || 'var(--accent)'}`,
-                    fontWeight: 500,
+                    borderLeft: '2px solid ' + (t.project_color || 'var(--accent)'),
                   }}>{t.title}</div>
                 ))}
                 {dayTasks.length > 3 && (
-                  <div style={{ fontSize: 9.5, color: 'var(--ink4)', textAlign: 'center', paddingTop: 3 }}>+{dayTasks.length - 3} more</div>
+                  <div style={{ fontSize: 9, color: 'var(--ink4)', textAlign: 'center', paddingTop: 2 }}>+{dayTasks.length - 3} more</div>
                 )}
               </div>
             </div>
