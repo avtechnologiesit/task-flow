@@ -4,8 +4,8 @@ import { Project } from '@/types'
 import { Icons } from './icons'
 
 const COLORS = [
-  '#2d6a4f', '#1d4ed8', '#0891b2', '#7c3aed', '#db2777',
-  '#dc2626', '#ea580c', '#b45309', '#65a30d', '#0d9488',
+  '#2d6a4f', '#1e40af', '#0891b2', '#7c3aed', '#a16207',
+  '#b91c1c', '#db2777', '#9333ea', '#0d9488', '#15803d',
 ]
 
 interface Props {
@@ -36,50 +36,56 @@ export function ProjectModal({ project, onClose, onSave, onDelete }: Props) {
 
   return (
     <div onClick={onClose} style={{
-      position: 'fixed', inset: 0, background: 'rgba(28,28,26,.45)',
+      position: 'fixed', inset: 0, background: 'rgba(28,28,26,.3)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      zIndex: 100, padding: 20, backdropFilter: 'blur(6px)',
+      zIndex: 100, padding: 20, backdropFilter: 'blur(8px)',
     }}>
       <div onClick={e => e.stopPropagation()} className="fade-in" style={{
         background: 'var(--card)', borderRadius: 16, border: '1px solid var(--border)',
         width: '100%', maxWidth: 480, boxShadow: 'var(--shadow-lg)',
       }}>
-        <div style={{ padding: '20px 24px 6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ padding: '20px 24px 8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span className="eyebrow">{project ? 'Edit project' : 'New project'}</span>
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', padding: 6, borderRadius: 6, color: 'var(--ink3)' }}><Icons.x size={14} /></button>
         </div>
 
-        <div style={{ padding: '8px 24px 20px' }}>
+        <div style={{ padding: '10px 24px' }}>
           <div style={{ marginBottom: 18 }}>
             <div className="eyebrow" style={{ marginBottom: 8 }}>Project name</div>
             <input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Website redesign"
-              autoFocus className="serif"
-              style={{ ...inputStyle, fontSize: 20, padding: '10px 12px', fontFamily: "'Instrument Serif', serif", letterSpacing: '-0.02em' }} />
+              autoFocus
+              className="serif"
+              style={{
+                ...inputStyle,
+                fontSize: 22, fontWeight: 400, fontStyle: name ? 'normal' : 'italic',
+                letterSpacing: '-0.02em', padding: '10px 14px',
+              }} />
           </div>
 
           <div style={{ marginBottom: 18 }}>
-            <div className="eyebrow" style={{ marginBottom: 8 }}>Color</div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <div className="eyebrow" style={{ marginBottom: 9 }}>Color</div>
+            <div style={{ display: 'flex', gap: 9, flexWrap: 'wrap' }}>
               {COLORS.map(c => (
                 <button key={c} onClick={() => setColor(c)} style={{
-                  width: 28, height: 28, borderRadius: 8, background: c, border: 'none',
-                  outline: color === c ? `2px solid var(--ink)` : 'none',
-                  outlineOffset: 2, cursor: 'pointer',
-                  boxShadow: color === c ? '0 0 0 4px var(--card), 0 0 0 5px var(--ink)' : 'none',
+                  width: 30, height: 30, borderRadius: 8, background: c, border: 'none',
+                  outline: color === c ? '2px solid var(--ink)' : 'none',
+                  outlineOffset: 3,
+                  transition: 'transform .15s',
+                  transform: color === c ? 'scale(1.05)' : 'none',
                 }} />
               ))}
             </div>
           </div>
 
-          <div>
+          <div style={{ marginBottom: 18 }}>
             <div className="eyebrow" style={{ marginBottom: 8 }}>Notes (optional)</div>
             <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
               placeholder="Quick notes about this project..."
-              style={{ ...inputStyle, resize: 'vertical', minHeight: 75, lineHeight: 1.55 }} />
+              style={{ ...inputStyle, resize: 'vertical', minHeight: 76, lineHeight: 1.55 }} />
           </div>
         </div>
 
-        <div style={{ padding: '13px 24px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ padding: '14px 24px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', background: 'var(--bg2)', borderRadius: '0 0 16px 16px' }}>
           {project && onDelete ? (
             <button onClick={() => { if (confirm('Delete this project and all its tasks?')) { onDelete(project.id); onClose() } }} style={{
               padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
@@ -95,6 +101,7 @@ export function ProjectModal({ project, onClose, onSave, onDelete }: Props) {
               padding: '8px 18px', borderRadius: 8, border: 'none',
               background: name.trim() ? 'var(--accent)' : 'var(--bg3)',
               color: name.trim() ? '#fff' : 'var(--ink4)', fontSize: 12, fontWeight: 600,
+              letterSpacing: '0.01em',
             }}>Save</button>
           </div>
         </div>
@@ -104,7 +111,7 @@ export function ProjectModal({ project, onClose, onSave, onDelete }: Props) {
 }
 
 const inputStyle: React.CSSProperties = {
-  width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid var(--border)',
+  width: '100%', padding: '8px 12px', borderRadius: 9, border: '1px solid var(--border)',
   background: 'var(--card)', fontSize: 14, color: 'var(--ink)', outline: 'none',
   fontFamily: 'inherit',
 }
