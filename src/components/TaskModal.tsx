@@ -15,9 +15,9 @@ interface Props {
 }
 
 const PRIORITIES = [
-  { id: 'low', label: 'Low', color: '#a8a59c' },
-  { id: 'normal', label: 'Normal', color: '#1d4ed8' },
-  { id: 'high', label: 'High', color: '#b45309' },
+  { id: 'low', label: 'Low', color: '#9c9a92' },
+  { id: 'normal', label: 'Normal', color: '#1e40af' },
+  { id: 'high', label: 'High', color: '#a16207' },
   { id: 'urgent', label: 'Urgent', color: '#b91c1c' },
 ] as const
 
@@ -69,9 +69,9 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
     <div
       onClick={onClose}
       style={{
-        position: 'fixed', inset: 0, background: 'rgba(28,28,26,.45)',
+        position: 'fixed', inset: 0, background: 'rgba(28,28,26,.3)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        zIndex: 100, padding: 20, backdropFilter: 'blur(6px)',
+        zIndex: 100, padding: 20, backdropFilter: 'blur(8px)',
       }}
     >
       <div
@@ -79,18 +79,18 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
         className="fade-in"
         style={{
           background: 'var(--card)', borderRadius: 16, border: '1px solid var(--border)',
-          width: '100%', maxWidth: 600, maxHeight: '90vh', overflow: 'auto',
+          width: '100%', maxWidth: 640, maxHeight: '90vh', overflow: 'auto',
           boxShadow: 'var(--shadow-lg)',
         }}
       >
         {/* Header */}
-        <div style={{ padding: '22px 26px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ padding: '20px 28px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span className="eyebrow">Task</span>
           <button onClick={onClose} style={{ background: 'transparent', border: 'none', padding: 6, borderRadius: 6, color: 'var(--ink3)' }}><Icons.x size={16} /></button>
         </div>
 
-        {/* Title - using serif for editorial feel */}
-        <div style={{ padding: '10px 26px' }}>
+        {/* Title */}
+        <div style={{ padding: '14px 28px 4px' }}>
           <input
             value={title} onChange={e => setTitle(e.target.value)} onBlur={saveTitle}
             onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
@@ -98,14 +98,14 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
             className="serif"
             style={{
               width: '100%', background: 'transparent', border: 'none', outline: 'none',
-              fontSize: 26, fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.025em',
+              fontSize: 26, fontWeight: 400, color: 'var(--ink)', letterSpacing: '-0.02em',
               lineHeight: 1.2,
             }}
           />
         </div>
 
         {/* Description */}
-        <div style={{ padding: '0 26px 18px' }}>
+        <div style={{ padding: '8px 28px 20px' }}>
           <textarea
             value={description} onChange={e => setDescription(e.target.value)} onBlur={saveDesc}
             placeholder="Add a description..."
@@ -118,7 +118,7 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
         </div>
 
         {/* Properties grid */}
-        <div style={{ padding: '0 26px 18px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        <div style={{ padding: '0 28px 18px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
           <Field label="Project">
             <select
               value={task.project_id || ''}
@@ -129,6 +129,7 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
               {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </Field>
+
           <Field label="Due date">
             <input
               type="date"
@@ -137,20 +138,23 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
               style={selStyle}
             />
           </Field>
+
           <Field label="Priority">
-            <div style={{ display: 'flex', gap: 4 }}>
+            <div style={{ display: 'flex', gap: 5 }}>
               {PRIORITIES.map(p => (
                 <button key={p.id}
                   onClick={() => onUpdate({ priority: p.id })}
                   style={{
                     flex: 1, padding: '7px 6px', borderRadius: 7, fontSize: 11, fontWeight: 500,
-                    border: `1px solid ${task.priority === p.id ? p.color : 'var(--border)'}`,
-                    background: task.priority === p.id ? p.color + '14' : 'var(--card)',
+                    border: '1px solid ' + (task.priority === p.id ? p.color : 'var(--border)'),
+                    background: task.priority === p.id ? p.color + '18' : 'var(--card)',
                     color: task.priority === p.id ? p.color : 'var(--ink2)',
+                    transition: 'all .15s',
                   }}>{p.label}</button>
               ))}
             </div>
           </Field>
+
           <Field label="Recurring">
             <select
               value={task.recurring || ''}
@@ -163,16 +167,16 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
         </div>
 
         {/* Tags */}
-        <div style={{ padding: '0 26px 18px' }}>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>Tags</div>
+        <div style={{ padding: '0 28px 18px' }}>
+          <div className="eyebrow" style={{ marginBottom: 9 }}>Tags</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
             {(task.tags || []).map(tag => (
               <span key={tag} style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px',
+                display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 11px',
                 borderRadius: 14, background: 'var(--bg2)', fontSize: 12, color: 'var(--ink2)',
                 border: '1px solid var(--border)',
               }}>
-                #{tag}
+                {tag}
                 <button onClick={() => removeTag(tag)} style={{ background: 'transparent', border: 'none', color: 'var(--ink4)', padding: 0, display: 'inline-flex' }}><Icons.x size={10} /></button>
               </span>
             ))}
@@ -183,26 +187,21 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
               placeholder="Add tag..."
               style={{
                 background: 'transparent', border: 'none', outline: 'none',
-                fontSize: 12, padding: '3px 4px', minWidth: 80, color: 'var(--ink)',
+                fontSize: 12, padding: '4px 6px', minWidth: 90, color: 'var(--ink)',
               }}
             />
           </div>
         </div>
 
         {/* Subtasks */}
-        <div style={{ padding: '0 26px 18px', borderTop: '1px solid var(--border)', paddingTop: 18 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-            <span className="eyebrow">Subtasks</span>
-            {task.subtasks && task.subtasks.length > 0 && (
-              <span className="mono" style={{ fontSize: 11, color: 'var(--accent)', fontWeight: 500 }}>
-                {task.subtasks.filter(s => s.done).length}/{task.subtasks.length}
-              </span>
-            )}
+        <div style={{ padding: '18px 28px 18px', borderTop: '1px solid var(--border)' }}>
+          <div className="eyebrow" style={{ marginBottom: 12 }}>
+            Subtasks {task.subtasks && task.subtasks.length > 0 && <span style={{ color: 'var(--accent)', marginLeft: 6 }} className="mono">{task.subtasks.filter(s => s.done).length}/{task.subtasks.length}</span>}
           </div>
           {(task.subtasks || []).map(sub => (
             <SubtaskRow key={sub.id} subtask={sub} onToggle={onToggleSubtask} onDelete={onDeleteSubtask} />
           ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 6, padding: '4px 0' }}>
             <Icons.plus size={14} color="var(--ink4)" />
             <input
               value={newSubtask}
@@ -211,14 +210,14 @@ export function TaskModal({ task, projects, onClose, onUpdate, onDelete, onAddSu
               placeholder="Add a subtask..."
               style={{
                 flex: 1, background: 'transparent', border: 'none', outline: 'none',
-                fontSize: 13.5, padding: '6px 0', color: 'var(--ink)',
+                fontSize: 13, padding: '5px 0', color: 'var(--ink)',
               }}
             />
           </div>
         </div>
 
         {/* Actions */}
-        <div style={{ padding: '14px 26px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ padding: '16px 28px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', background: 'var(--bg2)', borderRadius: '0 0 16px 16px' }}>
           <button onClick={onDelete} style={{
             padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border)',
             background: 'var(--card)', color: 'var(--red)', fontSize: 12, fontWeight: 500,
@@ -251,23 +250,23 @@ function SubtaskRow({ subtask, onToggle, onDelete }: { subtask: Subtask; onToggl
   const [hover, setHover] = useState(false)
   return (
     <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
-      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0' }}>
+      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderRadius: 6 }}>
       <button onClick={() => onToggle(subtask.id, !subtask.done)}
         className={subtask.done ? 'fancy-check checked' : 'fancy-check'}
         style={{
           width: 16, height: 16, borderRadius: 4,
-          border: `1.5px solid ${subtask.done ? 'var(--accent)' : 'var(--border2)'}`,
+          border: '1.5px solid ' + (subtask.done ? 'var(--accent)' : 'var(--border2)'),
           background: subtask.done ? 'var(--accent)' : 'var(--card)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
         }}>
         {subtask.done && <Icons.check size={9} color="#fff" />}
       </button>
       <span style={{
-        flex: 1, fontSize: 13.5, color: subtask.done ? 'var(--ink4)' : 'var(--ink2)',
+        flex: 1, fontSize: 13, color: subtask.done ? 'var(--ink4)' : 'var(--ink2)',
         textDecoration: subtask.done ? 'line-through' : 'none',
       }}>{subtask.title}</span>
       {hover && (
-        <button onClick={() => onDelete(subtask.id)} style={{ background: 'transparent', border: 'none', color: 'var(--ink4)', padding: 3, display: 'inline-flex' }}>
+        <button onClick={() => onDelete(subtask.id)} style={{ background: 'transparent', border: 'none', color: 'var(--ink4)', padding: 2 }}>
           <Icons.x size={12} />
         </button>
       )}
@@ -277,5 +276,5 @@ function SubtaskRow({ subtask, onToggle, onDelete }: { subtask: Subtask; onToggl
 
 const selStyle: React.CSSProperties = {
   width: '100%', padding: '8px 11px', borderRadius: 8, border: '1px solid var(--border)',
-  background: 'var(--card)', fontSize: 13.5, color: 'var(--ink)', outline: 'none',
+  background: 'var(--card)', fontSize: 13, color: 'var(--ink)', outline: 'none',
 }
