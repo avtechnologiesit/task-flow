@@ -32,10 +32,14 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
       onMouseLeave={() => setHover(false)}
       onClick={() => onClick(task)}
       style={{
-        display: 'flex', alignItems: 'flex-start', gap: 14, padding: compact ? '11px 14px' : '14px 18px',
-        borderRadius: 10, background: hover ? 'var(--card)' : 'transparent',
-        cursor: 'pointer', transition: 'all .15s ease',
-        border: `1px solid ${hover ? 'var(--border)' : 'transparent'}`,
+        display: 'flex', alignItems: 'flex-start', gap: 14,
+        padding: compact ? '12px 16px' : '14px 18px',
+        borderRadius: 11,
+        background: hover ? 'var(--card)' : 'transparent',
+        cursor: 'pointer',
+        transition: 'all .15s cubic-bezier(.16,1,.3,1)',
+        border: '1px solid transparent',
+        borderColor: hover ? 'var(--border)' : 'transparent',
         boxShadow: hover ? 'var(--shadow-sm)' : 'none',
       }}
     >
@@ -44,8 +48,8 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
         onClick={e => { e.stopPropagation(); onToggle(task.id, done ? 'todo' : 'done') }}
         className={done ? 'fancy-check checked' : 'fancy-check'}
         style={{
-          flexShrink: 0, width: 18, height: 18, marginTop: 2,
-          border: `1.5px solid ${done ? 'var(--accent)' : 'var(--border2)'}`,
+          flexShrink: 0, width: 19, height: 19, marginTop: 1,
+          border: `1.5px solid ${done ? 'var(--accent)' : task.project_color || 'var(--border2)'}`,
           background: done ? 'var(--accent)' : 'var(--card)', borderRadius: '50%',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
@@ -55,22 +59,21 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
 
       {/* Body */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           <span style={{
             fontSize: 14, fontWeight: 500, color: done ? 'var(--ink4)' : 'var(--ink)',
-            textDecoration: done ? 'line-through' : 'none', lineHeight: 1.4,
-            letterSpacing: '-0.005em',
+            textDecoration: done ? 'line-through' : 'none', lineHeight: 1.45,
+            letterSpacing: '-0.01em',
           }}>{task.title}</span>
           {task.priority !== 'normal' && task.priority !== 'low' && !done && (
             <span style={{
-              fontSize: 9.5, padding: '2px 8px', borderRadius: 10, fontWeight: 600,
+              fontSize: 10, padding: '2px 8px', borderRadius: 11, fontWeight: 500, letterSpacing: '0.04em',
               background: PRIORITY_COLORS[task.priority].bg,
               color: PRIORITY_COLORS[task.priority].text,
-              display: 'flex', alignItems: 'center', gap: 4,
-              letterSpacing: '.04em',
+              display: 'flex', alignItems: 'center', gap: 4, textTransform: 'uppercase',
             }}>
-              {task.priority === 'urgent' && <Icons.flame size={9} />}
-              {task.priority.toUpperCase()}
+              {task.priority === 'urgent' && <Icons.flame size={10} />}
+              {task.priority}
             </span>
           )}
           {task.recurring && (
@@ -80,7 +83,7 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
 
         {/* Meta row */}
         {(task.due_date || task.project_name || (task.tags && task.tags.length > 0) || totalSubs > 0) && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginTop: 6, fontSize: 11.5, color: 'var(--ink3)', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 6, fontSize: 11, color: 'var(--ink3)', flexWrap: 'wrap' }}>
             {task.project_name && (
               <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: task.project_color || 'var(--ink4)' }} />
@@ -88,18 +91,19 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
               </span>
             )}
             {task.due_date && (
-              <span style={{ color: isOverdue ? 'var(--red)' : 'var(--ink3)', fontWeight: isOverdue ? 500 : 400 }}>
+              <span className="mono" style={{ color: isOverdue ? 'var(--red)' : 'var(--ink3)', fontWeight: isOverdue ? 500 : 400, fontSize: 11 }}>
                 {formatDueDate(task.due_date)}
               </span>
             )}
             {totalSubs > 0 && (
-              <span className="mono" style={{ fontSize: 11 }}>
+              <span className="mono" style={{ fontSize: 11, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <Icons.check size={10} color="var(--ink4)" />
                 {completedSubs}/{totalSubs}
               </span>
             )}
             {task.tags && task.tags.map(tag => (
-              <span key={tag} style={{ padding: '1px 8px', borderRadius: 6, background: 'var(--bg3)', fontSize: 10.5, color: 'var(--ink3)' }}>
-                #{tag}
+              <span key={tag} style={{ padding: '2px 8px', borderRadius: 7, background: 'var(--bg2)', fontSize: 11, color: 'var(--ink3)', border: '1px solid var(--border)' }}>
+                {tag}
               </span>
             ))}
           </div>
@@ -111,8 +115,8 @@ export function TaskItem({ task, onToggle, onClick, onDelete, compact }: Props) 
         <button
           onClick={e => { e.stopPropagation(); onDelete(task.id) }}
           style={{
-            background: 'transparent', border: 'none', padding: 7, borderRadius: 6,
-            color: 'var(--ink4)', flexShrink: 0, display: 'inline-flex',
+            background: 'transparent', border: 'none', padding: 7, borderRadius: 7,
+            color: 'var(--ink4)', flexShrink: 0,
           }}
           title="Delete"
         >
@@ -130,7 +134,7 @@ function formatDueDate(dateStr: string): string {
   if (diff === 0) return 'Today'
   if (diff === 1) return 'Tomorrow'
   if (diff === -1) return 'Yesterday'
-  if (diff < 0) return `${Math.abs(diff)}d overdue`
-  if (diff < 7) return `In ${diff}d`
+  if (diff < 0) return Math.abs(diff) + 'd overdue'
+  if (diff < 7) return 'In ' + diff + 'd'
   return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
 }
